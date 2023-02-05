@@ -1,6 +1,8 @@
 # White Matter Detection in the Brain
 
-White matter is the part of the brain that is heavily enriched in myelin, a fatty substance that causes increased signal transduction across the neurons using saltatory conduction. This project is to apply computer vision OpenCV and Flask to create an application that can detect the minute contour differences in the histological and/or MRI images of the brain and displaying the image containing regional differences. 
+White matter is the part of the brain that is heavily enriched in myelin, a fatty substance that causes increased signal transduction across the neurons using saltatory conduction. This project is to apply computer vision OpenCV and Flask to create an application that can detect the minute contour differences in the histological and/or MRI images of the brain and displaying the image containing regional differences.
+
+For more information on myelin refer to this <a href='https://www.nationalmssociety.org/What-is-MS/Definition-of-MS/Myelin'>link</a> by the National MS Society
 
 <img src='https://www.brainline.org/sites/default/files/slides/fmri.jpg'>
 
