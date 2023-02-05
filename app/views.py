@@ -1,6 +1,6 @@
 # Important imports
 from app import app
-from flask import request, render_template
+from flask import request, render_template, session
 import os
 from skimage.metrics import structural_similarity
 import imutils
@@ -66,6 +66,12 @@ def index():
                     return render_template('index.html',pred=str(round(score*100,2)) + '%' + ' correct')
                 else:
                     return render_template('index.html',pred=str('Please Input Both Images'))
+@app.route('/show_image')
+def displayImage():
+    # Getting uploaded file path from session
+    diff = os.path.join(app.config['GENERATED'], 'image_diff.png')
+    return render_template('index3.html')
+
 # Main function
 if __name__ == '__main__':
     app.run(debug=True)
