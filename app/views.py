@@ -4,10 +4,14 @@ from flask import request, render_template, session
 import os
 from skimage.metrics import structural_similarity
 import imutils
-import cv2
+import cv2 as cv
 from PIL import Image
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+import base64
+import io
 
 # Adding path to config
 app.config['UPLOADED'] = 'app/static/uploads'
@@ -38,33 +42,33 @@ def contours():
             uploaded_image2.save(os.path.join(app.config['UPLOADED'], 'image2.png'))
 
             # Read uploaded and original image as array
-            uploaded_image1 = cv2.imread(os.path.join(app.config['UPLOADED'], 'image1.png'))
-            uploaded_image2 = cv2.imread(os.path.join(app.config['UPLOADED'], 'image2.png'))
+            uploaded_image1 = cv.imread(os.path.join(app.config['UPLOADED'], 'image1.png'))
+            uploaded_image2 = cv.imread(os.path.join(app.config['UPLOADED'], 'image2.png'))
 
             # Convert image into grayscale
-            image1_gray = cv2.cvtColor(uploaded_image1, cv2.COLOR_BGR2GRAY)
-            image2_gray = cv2.cvtColor(uploaded_image2, cv2.COLOR_BGR2GRAY)
+            image1_gray = cv.cvtColor(uploaded_image1, cv.COLOR_BGR2GRAY)
+            image2_gray = cv.cvtColor(uploaded_image2, cv.COLOR_BGR2GRAY)
 
             # Calculate structural similarity
             (score, diff) = structural_similarity(image1_gray, image2_gray, full=True)
             diff = (diff * 255).astype("uint8")
 
             # Calculate threshold and contours
-            thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-            cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            thresh = cv.threshold(diff, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)[1]
+            cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
             cnts = imutils.grab_contours(cnts)
             
             # Draw contours on image
             for c in cnts:
-                (x, y, w, h) = cv2.boundingRect(c)
-                cv2.rectangle(uploaded_image1, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                cv2.rectangle(uploaded_image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                (x, y, w, h) = cv.boundingRect(c)
+                cv.rectangle(uploaded_image1, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                cv.rectangle(uploaded_image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
             # Save all output images (if required)
-            cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_1.png'), uploaded_image1)
-            cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_2.png'), uploaded_image2)
-            cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_diff.png'), diff)
-            cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_thresh.png'), thresh)
+            cv.imwrite(os.path.join(app.config['GENERATED'], 'image_1.png'), uploaded_image1)
+            cv.imwrite(os.path.join(app.config['GENERATED'], 'image_2.png'), uploaded_image2)
+            cv.imwrite(os.path.join(app.config['GENERATED'], 'image_diff.png'), diff)
+            cv.imwrite(os.path.join(app.config['GENERATED'], 'image_thresh.png'), thresh)
             return render_template('contours.html',pred='Structural Similarity: ' + str(round(score*100,2)) + '%')
         
         else:
@@ -90,19 +94,20 @@ def hist():
         if file_upload:
             #uploading and saving file:
             uploaded_file = Image.open(file_upload).resize((250,160))
-            grayed_file = cv2.cvtColor(uploaded_file, cv2.COLOR_BGR2GRAY)
-            grayed_file.save(os.path.join(app.config['UPLOADED'], 'plt.png'))
-            
-            filename_plt = os.path.join(app.config['GENERATED'], 'plt.png')
-            #reading into cv2 and converting to hist plt
-            img = cv2.imread(filename_plt, 0)
-            plt.hist(img.ravel(),256,[0,256])
-            
-            #saving histogram plot as image
-            plt.savefig(os.path.join(app.config['GRAPHS'],'plt.png'))
-            plot_image = os.path.join(app.config['GRAPHS'],'plt.png')
+            uploaded_file.save(os.path.join(app.config['UPLOADED'], 'plt.png'))
 
-            return render_template('histogram.html', output=plot_image)
+            #change to numpy array
+            img = cv.imread(os.path.join(app.config['UPLOADED'], 'plt.png'), cv.IMREAD_GRAYSCALE)
+            img = io.BytesIO()
+            #reading into cv and converting to hist plt
+            hist = cv.calcHist([img],[0],None,[256],[0,256])
+            plt.plot(hist)
+            # passing images to html using base64
+            plt.savefig(img, format='png')
+            img.seek(0)
+            figdata_png = base64.b64encode(img.getvalue()).decode('utf8')
+            
+            return render_template('histogram.html', output=figdata_png)
         else: #if the image is not imported and the check button is clicked
             return render_template('histogram.html', output=str('Please Input an Image'))
     else:

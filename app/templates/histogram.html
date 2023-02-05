@@ -49,8 +49,8 @@
           </div>
         </form>
        	<div style="text-align: center; padding-top: 50px">
-          {% if file_upload %}
-            <img src="{{url_for('static', filename='graphs/plt.png')}}" width="500" height="400">
+          {% if file_upload != None %}
+            <img src="data:image/png;base64,{{ output }}"\>
           {% else %}
             {{output}}
           {% endif %}
