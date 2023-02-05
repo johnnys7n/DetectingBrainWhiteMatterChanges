@@ -34,10 +34,9 @@
                       <input type = "file" name="file_upload" id="file_upload" />
                     </div>
                     <div class = "file-path-wrapper">
-                      <input class = "file-path validate" type = "text" placeholder = "Upload file 1" name="file_name" id="file_name" />
+                      <input class = "file-path validate" type = "text" placeholder = "Upload file" name="file_name" id="file_name" />
 
                     </div>
-    
                   </div>
                   
               </div>
@@ -50,7 +49,12 @@
           </div>
         </form>
        	<div style="text-align: center; padding-top: 50px">
-      		<h5>{{output}}</h5>
+          {% if file_upload %}
+            <img src="{{url_for('static', filename='graphs/plt.png')}}" width="500" height="400">
+          {% else %}
+            {{output}}
+          {% endif %}
+          
       </div>
       <br><br>
     </div>

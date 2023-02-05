@@ -12,6 +12,7 @@ import numpy as np
 # Adding path to config
 app.config['UPLOADED'] = 'app/static/uploads'
 app.config['GENERATED'] = 'app/static/generated'
+app.config['GRAPHS'] = 'app/static/graphs'
 
 # Route to home page
 @app.route("/")
@@ -64,7 +65,7 @@ def contours():
             cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_2.png'), uploaded_image2)
             cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_diff.png'), diff)
             cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_thresh.png'), thresh)
-            return render_template('contours.html',pred=str(round(score*100,2)) + '%' + ' correct')
+            return render_template('contours.html',pred='Structural Similarity: ' + str(round(score*100,2)) + '%')
         
         else:
             return render_template('contours.html',pred=str('Please Input Both Images'))
@@ -85,9 +86,24 @@ def hist():
         file_upload = request.files['file_upload']
         filename = file_upload.filename
 
+        #if the image is imported
         if file_upload:
-            render_template('histogram.html', output=str('WORKED'))
-        else:
+            #uploading and saving file:
+            uploaded_file = Image.open(file_upload).resize((250,160))
+            grayed_file = cv2.cvtColor(uploaded_file, cv2.COLOR_BGR2GRAY)
+            grayed_file.save(os.path.join(app.config['UPLOADED'], 'plt.png'))
+            
+            filename_plt = os.path.join(app.config['GENERATED'], 'plt.png')
+            #reading into cv2 and converting to hist plt
+            img = cv2.imread(filename_plt, 0)
+            plt.hist(img.ravel(),256,[0,256])
+            
+            #saving histogram plot as image
+            plt.savefig(os.path.join(app.config['GRAPHS'],'plt.png'))
+            plot_image = os.path.join(app.config['GRAPHS'],'plt.png')
+
+            return render_template('histogram.html', output=plot_image)
+        else: #if the image is not imported and the check button is clicked
             return render_template('histogram.html', output=str('Please Input an Image'))
     else:
         return render_template('histogram.html')
