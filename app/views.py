@@ -8,9 +8,8 @@ import cv2
 from PIL import Image
 
 # Adding path to config
-app.config['INITIAL_FILE_UPLOADS'] = 'app/static/uploads'
-app.config['EXISTNG_FILE'] = 'app/static/original'
-app.config['GENERATED_FILE'] = 'app/static/generated'
+app.config['UPLOADED'] = 'app/static/uploads'
+app.config['GENERATED'] = 'app/static/generated'
 
 # Route to home page
 @app.route("/", methods=["GET", "POST"])
@@ -23,27 +22,28 @@ def index():
 	# Execute if request is post
 	if request.method == "POST":
                 # Get uploaded image
-                file_upload = request.files['file_upload']
-                filename = file_upload.filename
-                
-                # Resize and save the uploaded image
-                uploaded_image = Image.open(file_upload).resize((250,160))
-                uploaded_image.save(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
+                file_upload1 = request.files['file_upload1']
+                filename1 = file_upload1.filename
 
-                # Resize and save the original image to ensure both uploaded and original matches in size
-                original_image = Image.open(os.path.join(app.config['EXISTNG_FILE'], 'image.png')).resize((250,160))
-                original_image.save(os.path.join(app.config['EXISTNG_FILE'], 'image.png'))
+                file_upload2 = request.files['file_upload2']
+                filename2 = file_upload1.filename
+
+                # Resize and save the uploaded image
+                uploaded_image1 = Image.open(file_upload1).resize((250,160))
+                uploaded_image1.save(os.path.join(app.config['UPLOADED'], 'image1.png'))
+                uploaded_image2 = Image.open(file_upload2).resize((250,160))
+                uploaded_image2.save(os.path.join(app.config['UPLOADED'], 'image2.png'))
 
                 # Read uploaded and original image as array
-                original_image = cv2.imread(os.path.join(app.config['EXISTNG_FILE'], 'image.png'))
-                uploaded_image = cv2.imread(os.path.join(app.config['INITIAL_FILE_UPLOADS'], 'image.png'))
+                uploaded_image1 = cv2.imread(os.path.join(app.config['UPLOADED'], 'image1.png'))
+                uploaded_image2 = cv2.imread(os.path.join(app.config['UPLOADED'], 'image2.png'))
 
                 # Convert image into grayscale
-                original_gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
-                uploaded_gray = cv2.cvtColor(uploaded_image, cv2.COLOR_BGR2GRAY)
+                image1_gray = cv2.cvtColor(uploaded_image1, cv2.COLOR_BGR2GRAY)
+                image2_gray = cv2.cvtColor(uploaded_image2, cv2.COLOR_BGR2GRAY)
 
                 # Calculate structural similarity
-                (score, diff) = structural_similarity(original_gray, uploaded_gray, full=True)
+                (score, diff) = structural_similarity(image1_gray, image2_gray, full=True)
                 diff = (diff * 255).astype("uint8")
 
                 # Calculate threshold and contours
@@ -54,14 +54,14 @@ def index():
                 # Draw contours on image
                 for c in cnts:
                     (x, y, w, h) = cv2.boundingRect(c)
-                    cv2.rectangle(original_image, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                    cv2.rectangle(uploaded_image, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    cv2.rectangle(uploaded_image1, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    cv2.rectangle(uploaded_image2, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
                 # Save all output images (if required)
-                cv2.imwrite(os.path.join(app.config['GENERATED_FILE'], 'image_original.png'), original_image)
-                cv2.imwrite(os.path.join(app.config['GENERATED_FILE'], 'image_uploaded.png'), uploaded_image)
-                cv2.imwrite(os.path.join(app.config['GENERATED_FILE'], 'image_diff.png'), diff)
-                cv2.imwrite(os.path.join(app.config['GENERATED_FILE'], 'image_thresh.png'), thresh)
+                cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_1.png'), uploaded_image1)
+                cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_2.png'), uploaded_image2)
+                cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_diff.png'), diff)
+                cv2.imwrite(os.path.join(app.config['GENERATED'], 'image_thresh.png'), thresh)
                 return render_template('index.html',pred=str(round(score*100,2)) + '%' + ' correct')
        
 # Main function
