@@ -13,6 +13,8 @@ import numpy as np
 import base64
 import io
 
+
+
 # Adding path to config
 app.config['UPLOADED'] = 'app/static/uploads'
 app.config['GENERATED'] = 'app/static/generated'
@@ -93,22 +95,23 @@ def hist():
         #if the image is imported
         if file_upload:
             #uploading and saving file:
+            import urllib
             uploaded_file = Image.open(file_upload)
             uploaded_file.save(os.path.join(app.config['UPLOADED'], 'plt.png'))
 
             #change to numpy array
             img = cv.imread(os.path.join(app.config['UPLOADED'], 'plt.png'))
-            img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
             #reading into cv and converting to hist plt
-            hist = cv.calcHist([img_gray],[0],None,[256],[0,256])
+            hist = cv.calcHist([img],[0],None,[256],[0,256])
             plt.plot(hist)
-            # passing images to html using base64
+            
             img = io.BytesIO()
+            # passing images to html using base64
             plt.savefig(img, format='png')
             img.seek(0)
-            figdata_png = base64.b64encode(img.getvalue())
+            figdata_png = urllib.parse.quote(base64.b64encode(img.getvalue()).decode())
             
-            return render_template('histogram.html', output=figdata_png.decode('utf8'))
+            return render_template('histogram.html', output = figdata_png)
         else: #if the image is not imported and the check button is clicked
             return render_template('histogram.html', output=str('Please Input an Image'))
     else:

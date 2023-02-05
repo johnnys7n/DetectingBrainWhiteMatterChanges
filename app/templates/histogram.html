@@ -50,7 +50,7 @@
         </form>
        	<div style="text-align: center; padding-top: 50px">
           {% if file_upload %}
-            <img src="data:image/png;base64,{{ output }}"\>
+            <img src="data:image/png;base64, {{ output }}" width="'500" height="200">
           {% else %}
             {{output}}
           {% endif %}
