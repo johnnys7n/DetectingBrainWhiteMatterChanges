@@ -23,3 +23,4 @@ You will get url copy it and paste in browser.
 
 Currently Working on:
 * Outputing the regional anatomical areas of the brain and its specific structural similarity score (ie. Thalamus, Hippocampus, Corpus Callosum, Cortex, etc)
+* Training a set of images to classify areas of the brain that are "sick" 
