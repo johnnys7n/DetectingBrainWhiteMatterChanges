@@ -1,70 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>White Matter Change Detection</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+  <title>Alkahest CNS Tool</title>
 
   <!-- CSS  -->
-  <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
 
 <body>
-  <nav style="background-color: #000000" class="lighten-1"  role="navigation" style="height: 100px">
+  <nav style="background-color: #000000" class="lighten-1" role="navigation" style="height: 100px">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo center"><h5>White Matter Change Detection</h5></a>
+      <a id="logo-container" class="brand-logo center">
+        <h5>Contour Structural Similarity</h5>
+      </a>
     </div>
   </nav>
 
 
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
-      <div class="row">
+      <div class="row center">
+        <img src="https://www.alkahest.com/wp-content/uploads/2019/08/alkahest-logo-colorR.png" width="50px"
+          height="50px" />
+
         <form action='/contours' method="post" class="col s12" enctype="multipart/form-data">
           <div class="row">
-          	<div class="input-field col s3">
+            <div class="input-field col s3">
             </div>
 
             <div class="input-field col s5" style="margin-left: 20px; margin-top: 100px">
-              <div class = "row">
-                  <label for="first_name"><b>Upload Brain Image 1</b></label><br>
-                  <div class = "file-field input-field">
-                    <div class = "btn" style="background-color: #000000">
-                      <span>Browse</span>
-                      <input type = "file" name="file_upload1" id="file_upload1" />
-                    </div>
-                    <div class = "file-path-wrapper">
-                      <input class = "file-path validate" type = "text" placeholder = "Upload file 1" name="file_name1" id="file_name" />
-
-                    </div>
-    
-                  </div>
-                  
-              </div>
-              <div class = "row">
-                <label for="first_name"><b>Upload Brain Image 2</b></label><br>
-                <div class = "file-field input-field">
-                  <div class = "btn" style="background-color: #000000">
+              <div class="row">
+                <label for="first_name"><b>Upload Brain Image 1</b></label><br>
+                <div class="file-field input-field">
+                  <div class="btn" style="background-color: #000000">
                     <span>Browse</span>
-                    <input type = "file" name="file_upload2" id="file_upload2" />
+                    <input type="file" name="file_upload1" id="file_upload1" />
                   </div>
-                  <div class = "file-path-wrapper">
-                    <input class = "file-path validate" type = "text" placeholder = "Upload file 2" name="file_name2" id="file_name" />
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload file 1" name="file_name1"
+                      id="file_name" />
 
                   </div>
 
-            </div>
-          </div>
-    
-          <div class="row center">
-            <button type="submit" class="btn-large" style="background-color: #000000">Check</button>
-          </div>
+                </div>
+
+              </div>
+              <div class="row">
+                <label for="first_name"><b>Upload Brain Image 2</b></label><br>
+                <div class="file-field input-field">
+                  <div class="btn" style="background-color: #000000">
+                    <span>Browse</span>
+                    <input type="file" name="file_upload2" id="file_upload2" />
+                  </div>
+                  <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" placeholder="Upload file 2" name="file_name2"
+                      id="file_name" />
+
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row center">
+                <button type="submit" class="btn-large" style="background-color: #000000">Check</button>
+              </div>
         </form>
-       	<div style="text-align: center; padding-top: 50px">
-      		<h5>{{pred}}</h5>
+        <div style="text-align: center; padding-top: 50px">
+          <h5>{{pred}}</h5>
           <form action="/contours_show_image" target="_blank">
             <input type="submit" value="Display Image" />
-        </form>     	</div>
+          </form>
+        </div>
 
       </div>
       <br><br>
@@ -78,10 +87,10 @@
   <script src="./static/js/materialize.js"></script>
   <script type="text/javascript">
     document.getElementById('file_upload').onchange = function () {
-      	document.getElementById('file_name').value = this.value.slice(12,100);
+      document.getElementById('file_name').value = this.value.slice(12, 100);
     };
   </script>
 
-  </body>
-</html>
+</body>
 
+</html>

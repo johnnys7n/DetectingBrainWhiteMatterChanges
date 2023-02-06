@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <title>Pan Card Tampering</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+  <title>Alkahest CNS Tool</title>
 
   <!-- CSS  -->
-  <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="./static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
 </head>
 
 <body>
-  <nav style="background-color: #000000" class="lighten-1"  role="navigation" style="height: 100px">
+  <nav style="background-color: #000000" class="lighten-1" role="navigation" style="height: 100px">
     <div class="nav-wrapper container">
-      <a id="logo-container" class="brand-logo center"><h5>White Matter Change Detection</h5></a>
+      <a id="logo-container" class="brand-logo center">
+        <h5>Contour Image Display</h5>
+      </a>
     </div>
   </nav>
 
 
-        </form>
-       	<div style="text-align: center; padding-top: 50px">
-          <img src="{{url_for('static', filename='generated/image_diff.png')}}" alt='Diffed_Image' width="500" height="400">
-        </form>     	
-      </div>
-      <br><br>
-    </div>
+  </form>
+  <div style="text-align: center; padding-top: 50px">
+    <img src="{{url_for('static', filename='generated/image_diff.png')}}" alt='Diffed_Image' width="500" height="400">
+    </form>
+  </div>
+  <br><br>
+  </div>
   </div>
 
   </div>
@@ -33,10 +36,10 @@
   <script src="./static/js/materialize.js"></script>
   <script type="text/javascript">
     document.getElementById('file_upload').onchange = function () {
-      	document.getElementById('file_name').value = this.value.slice(12,100);
+      document.getElementById('file_name').value = this.value.slice(12, 100);
     };
   </script>
 
-  </body>
-</html>
+</body>
 
+</html>
