@@ -49,12 +49,9 @@
           </div>
         </form>
        	<div style="text-align: center; padding-top: 50px">
-          {% if file_upload %}
-            <img src="data:image/png;base64, {{ output }}" width="'500" height="200">
-          {% else %}
-            {{output}}
-          {% endif %}
-          
+          {% if output %}
+            <img src="{{url_for('static', filename='graphs/plt_pic.png')}}" alt='Hist_Image' width="500" height="400"> 
+          {% endif %}         
       </div>
       <br><br>
     </div>

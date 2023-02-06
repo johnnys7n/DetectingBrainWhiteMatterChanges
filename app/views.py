@@ -1,18 +1,17 @@
 # Important imports
 from app import app
-from flask import request, render_template, session
+from flask import request, render_template, session, make_response
 import os
 from skimage.metrics import structural_similarity
 import imutils
 import cv2 as cv
 from PIL import Image
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 import numpy as np
 import base64
-import io
-
+from io import BytesIO
+import tempfile
 
 
 # Adding path to config
@@ -89,29 +88,41 @@ def displayImage():
 @app.route('/histogram', methods=['GET','POST'])
 def hist():
     if request.method=='POST': #executes when the request is post
+        # setting output to null for jinja frontend
+        output = False
         file_upload = request.files['file_upload']
         filename = file_upload.filename
 
         #if the image is imported
         if file_upload:
             #uploading and saving file:
-            import urllib
             uploaded_file = Image.open(file_upload)
             uploaded_file.save(os.path.join(app.config['UPLOADED'], 'plt.png'))
 
             #change to numpy array
-            img = cv.imread(os.path.join(app.config['UPLOADED'], 'plt.png'))
+            img1 = cv.imread(os.path.join(app.config['UPLOADED'], 'plt.png'))
+            
             #reading into cv and converting to hist plt
-            hist = cv.calcHist([img],[0],None,[256],[0,256])
-            plt.plot(hist)
+            hist = cv.calcHist([img1],[0],None,[256],[0,256])
+           
+            #creating a graph of the histogram output
+            fig = Figure()
+            canvas = FigureCanvas(fig)
+            axes = fig.add_subplot()
+            axes.set_title(f'Histogram for Pixel Intensity: {filename}')
+            axes.set_ylabel('No of Pixels')
+            axes.set_xlabel('Pixel Values')
             
-            img = io.BytesIO()
-            # passing images to html using base64
-            plt.savefig(img, format='png')
-            img.seek(0)
-            figdata_png = urllib.parse.quote(base64.b64encode(img.getvalue()).decode())
+            #plot the data
+            axes.plot(hist)
             
-            return render_template('histogram.html', output = figdata_png)
+            # saving plotted image into a new folder as png then decoding
+            buf = BytesIO()
+            fig.savefig(buf, format='png')
+            data = base64.b64encode(buf.getbuffer())
+            img_plt = Image.open(BytesIO(base64.b64decode(data)))
+            img_plt.save(os.path.join(app.config['GRAPHS'], 'plt_pic.png'))
+            return render_template('histogram.html', output=True)
         else: #if the image is not imported and the check button is clicked
             return render_template('histogram.html', output=str('Please Input an Image'))
     else:
