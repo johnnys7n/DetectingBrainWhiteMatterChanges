@@ -9,3 +9,4 @@ numpy
 matplotlib
 pybase64
 io
+cv
