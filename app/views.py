@@ -1,19 +1,9 @@
 from app import app
-from flask import request, render_template, session, make_response
-import os
-from skimage.metrics import structural_similarity
-import imutils
-import cv2 as cv
-from PIL import Image
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import numpy as np
-import base64
-from io import BytesIO
-import tempfile
 from app.contours import GettingContours
 from app.histogram import GetHist
-
+from flask import request, render_template, session, make_response
+import os
+import imutils
 
 # Adding path to config
 app.config['UPLOADED'] = 'app/static/uploads'
@@ -49,8 +39,8 @@ def displayImage():
 @app.route('/histogram', methods=['GET', 'POST'])
 def hist():
     if request.method == 'POST':  # executes when the request is post
-        f = GetHist()
-        f.get_histogram('file_upload')
+        f = GetHist('file_upload')
+        f.get_histogram()
 
     # Main function
 if __name__ == '__main__':
