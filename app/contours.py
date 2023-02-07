@@ -1,17 +1,3 @@
-from flask import request, render_template, session, make_response
-import os
-from skimage.metrics import structural_similarity
-import imutils
-import cv2 as cv
-from PIL import Image
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import numpy as np
-import base64
-from io import BytesIO
-import tempfile
-
-
 class GettingContours():
     def __init__(self, image1, image2):
         self.image1 = image1
@@ -64,7 +50,7 @@ class GettingContours():
                 cv.rectangle(uploaded_image2, (x, y),
                              (x + w, y + h), (0, 0, 255), 2)
 
-            # Save all output images (if required)
+            # Save all output images (if requestuired)
             cv.imwrite(os.path.join(
                 app.config['GENERATED'], 'image_1.png'), uploaded_image1)
             cv.imwrite(os.path.join(

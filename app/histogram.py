@@ -1,19 +1,3 @@
-from flask import request, render_template, session, make_response
-import os
-from skimage.metrics import structural_similarity
-import imutils
-import cv2 as cv
-from PIL import Image
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import numpy as np
-import base64
-from io import BytesIO
-import tempfile
-
-# setting output to null for jinja frontend
-
-
 class GetHist():
     def __init__(self, image1):
         self.image1 = image1
