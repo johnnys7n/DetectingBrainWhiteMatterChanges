@@ -1,13 +1,14 @@
 class GettingContours():
-    def get_contours(self, image1, image2):
+    def __init__(self, image1, image2):
         self.image1 = image1
         self.image2 = image2
 
+    def get_contours(self):
         # Get uploaded image
-        file_upload1 = request.files[image1]
+        file_upload1 = request.files[self.image1]
         filename1 = file_upload1.filename
 
-         file_upload2 = request.files[image2]
+         file_upload2 = request.files[self.image2]
           filename2 = file_upload1.filename
 
            if file_upload2 and file_upload1:

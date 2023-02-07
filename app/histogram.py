@@ -1,11 +1,12 @@
 # setting output to null for jinja frontend
 class GetHist():
-    def get_histogram(self, image1):
+    def __init__(self, image1):
         self.image1 = image1
 
+    def get_histogram(self):
         output = False
 
-        file_upload = request.files[image1]
+        file_upload = request.files[self.image1]
         filename = file_upload.filename
 
         # if the image is imported
