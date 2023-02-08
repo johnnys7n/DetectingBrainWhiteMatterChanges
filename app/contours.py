@@ -1,7 +1,28 @@
+from flask import request, render_template, session, make_response
+from flask import request, render_template, session, make_response
+import os
+import imutils
+from skimage.metrics import structural_similarity
+import cv2 as cv
+from PIL import Image
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
+import base64
+from io import BytesIO
+import tempfile
+from app import app
+
+
+app.config['UPLOADED'] = 'app/static/uploads'
+app.config['GENERATED'] = 'app/static/generated'
+app.config['GRAPHS'] = 'app/static/graphs'
+
+
 class GettingContours():
-    def __init__(self, image1, image2):
-        self.image1 = image1
-        self.image2 = image2
+    def __init__(self, img1=None, img2=None):
+        self.image1 = img1
+        self.image2 = img2
 
     def get_contours(self):
         # Get uploaded image
